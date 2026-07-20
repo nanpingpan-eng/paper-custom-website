@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>产品系列 | 笔记本·规划手册·贴纸定制</title>
+  <meta name="description" content="浏览全系列纸品定制产品：笔记本、规划手册、贴纸、信纸套装、便利贴等。支持小批量定制，工厂直供。">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "纸品定制产品系列",
+    "description": "全系列纸品定制产品，包括笔记本、规划手册、贴纸、信纸套装等"
+  }
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .page-hero {
+      padding: calc(var(--nav-h) + 60px) 0 60px;
+      background: var(--ivory-dark);
+      border-bottom: 1px solid var(--border);
+    }
+    .search-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      max-width: 480px;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 12px 18px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+    }
+    .search-bar input:focus { outline: none; border-color: var(--moss); }
+    .products-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .sidebar {
+      position: sticky;
+      top: calc(var(--nav-h) + 24px);
+    }
+    .sidebar__section { margin-bottom: 36px; }
+    .sidebar__title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar__links { display: flex; flex-direction: column; gap: 4px; }
+    .sidebar__link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      font-size: 0.88rem;
+      color: var(--charcoal-2);
+      border-radius: var(--radius);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .sidebar__link:hover,
+    .sidebar__link.active {
+      background: var(--ivory-dark);
+      color: var(--charcoal);
+    }
+    .sidebar__link.active { font-weight: 400; color: var(--moss); }
+    .sidebar__count {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--warm-gray);
+    }
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+    .results-count {
+      font-size: 0.85rem;
+      color: var(--warm-gray);
+    }
+    .empty-state {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--warm-gray);
+    }
+    @media (max-width: 900px) {
+      .products-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo">
+      <span class="nav__logo-main">[品牌名称]</span>
+      <span class="nav__logo-sub">Paper Custom Studio</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="/">首页</a></li>
+      <li><a href="products.html" class="active">产品系列</a></li>
+      <li><a href="about.html">关于我们</a></li>
+      <li><a href="contact.html">定制询价</a></li>
+      <li><a href="contact.html" class="nav__cta">立即询价</a></li>
+    </ul>
+    <button class="nav__hamburger" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <p class="label mb-16">Product Catalog</p>
+    <h1 style="font-size:clamp(2rem,4vw,3rem);margin-bottom:16px">全系列纸品定制</h1>
+    <p class="text-gray" style="max-width:500px">
+      浏览我们的定制产品目录，每款产品均支持封面、内页、尺寸全定制
+    </p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <div class="products-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar__section">
+          <div class="sidebar__title">搜索产品</div>
+          <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="输入产品关键词…">
+          </div>
+        </div>
+        <div class="sidebar__section">
+          <div class="sidebar__title">产品分类</div>
+          <div class="sidebar__links" id="sidebarCats">
+            <div class="sidebar__link active" data-slug="">全部产品</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Products -->
+      <main>
+        <div class="results-header">
+          <span class="results-count" id="resultsCount">加载中…</span>
+          <a href="contact.html" class="btn btn--outline" style="padding:8px 20px;font-size:0.75rem">批量询价</a>
+        </div>
+        <div class="product-grid" id="productGrid">
+          <div class="spinner"></div>
+        </div>
+        <div id="loadMoreWrap" class="text-center mt-40" style="display:none">
+          <button class="btn btn--outline" id="loadMoreBtn">加载更多产品</button>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div class="footer__logo">[品牌名称]</div>
+        <p class="footer__tagline">专注高品质纸品定制，以匠心工艺，传递品牌温度。</p>
+      </div>
+      <div>
+        <div class="footer__heading">产品系列</div>
+        <ul class="footer__links">
+          <li><a href="products.html?category=notebooks">笔记本 / 记事本</a></li>
+          <li><a href="products.html?category=planners">规划手册</a></li>
+          <li><a href="products.html?category=stickers">贴纸 / 标签</a></li>
+          <li><a href="products.html?category=letter-sets">信纸 / 信封</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__heading">快速导航</div>
+        <ul class="footer__links">
+          <li><a href="about.html">关于我们</a></li>
+          <li><a href="contact.html">联系询价</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__heading">联系我们</div>
+        <p style="font-size:0.85rem;color:rgba(249,245,238,0.5)">[联系信息待补充]</p>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2025 [公司名称]. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  const LIMIT = 12;
+  let currentSlug = '';
+  let currentSearch = '';
+  let offset = 0;
+  let total = 0;
+
+  // Read URL params
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('category')) currentSlug = urlParams.get('category');
+
+  // Load sidebar categories
+  async function loadSidebarCats() {
+    const data = await PaperCustom.apiFetch('/api/categories');
+    if (!data.success) return;
+    const container = document.getElementById('sidebarCats');
+    data.data.forEach(cat => {
+      const link = document.createElement('div');
+      link.className = 'sidebar__link' + (cat.slug === currentSlug ? ' active' : '');
+      link.dataset.slug = cat.slug;
+      link.innerHTML = `${cat.name} <span class="sidebar__count"></span>`;
+      container.appendChild(link);
+    });
+    if (currentSlug) {
+      container.querySelector('[data-slug=""]')?.classList.remove('active');
+    }
+    container.addEventListener('click', e => {
+      const link = e.target.closest('.sidebar__link');
+      if (!link) return;
+      container.querySelectorAll('.sidebar__link').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      currentSlug = link.dataset.slug;
+      offset = 0;
+      loadProducts(true);
+      // Update URL
+      const url = new URL(window.location);
+      if (currentSlug) url.searchParams.set('category', currentSlug);
+      else url.searchParams.delete('category');
+      window.history.pushState({}, '', url);
+    });
+  }
+
+  // Load products
+  async function loadProducts(reset = false) {
+    if (reset) {
+      offset = 0;
+      document.getElementById('productGrid').innerHTML = '<div class="spinner"></div>';
+    }
+    let url = `/api/products?limit=${LIMIT}&offset=${offset}`;
+    if (currentSlug) url += `&category=${currentSlug}`;
+    if (currentSearch) url += `&search=${encodeURIComponent(currentSearch)}`;
+
+    const data = await PaperCustom.apiFetch(url);
+    const grid = document.getElementById('productGrid');
+
+    if (!data.success) {
+      grid.innerHTML = `<div class="empty-state">加载失败，请刷新重试</div>`;
+      return;
+    }
+    total = data.total;
+    document.getElementById('resultsCount').textContent = `共 ${total} 款产品`;
+
+    if (reset) grid.innerHTML = '';
+
+    if (data.data.length === 0 && offset === 0) {
+      grid.innerHTML = `<div class="empty-state">
+        <p style="font-family:var(--font-display);font-size:1.5rem;margin-bottom:12px">暂无产品</p>
+        <p>该分类下暂无产品，请选择其他分类或<a href="contact.html" style="color:var(--moss)">联系询价</a></p>
+      </div>`;
+      document.getElementById('loadMoreWrap').style.display = 'none';
+      return;
+    }
+
+    data.data.forEach(p => {
+      grid.insertAdjacentHTML('beforeend', PaperCustom.renderProductCard(p));
+    });
+    offset += data.data.length;
+
+    const loadMoreWrap = document.getElementById('loadMoreWrap');
+    if (offset < total) loadMoreWrap.style.display = 'block';
+    else loadMoreWrap.style.display = 'none';
+  }
+
+  // Search
+  let searchTimer;
+  document.getElementById('searchInput').addEventListener('input', e => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      currentSearch = e.target.value.trim();
+      loadProducts(true);
+    }, 400);
+  });
+
+  // Load more
+  document.getElementById('loadMoreBtn').addEventListener('click', () => loadProducts(false));
+
+  // Init
+  loadSidebarCats();
+  loadProducts(true);
+</script>
+</body>
+</html>
