@@ -82,13 +82,13 @@ function renderProductCard(product) {
     <div class="product-card animate-up" onclick="location.href='product.html?slug=${product.slug}'">
       <div class="product-card__img-wrap">
         ${img}
-        ${product.featured ? '<span class="product-card__badge product-card__badge--new">精选</span>' : ''}
+        ${product.featured ? '<span class="product-card__badge product-card__badge--new">Featured</span>' : ''}
       </div>
       <div class="product-card__cat">${product.category_name || ''}</div>
       <div class="product-card__name">${product.name}</div>
-      ${product.moq ? `<div class="product-card__moq">起订量：${product.moq}</div>` : ''}
+      ${product.moq ? `<div class="product-card__moq">MOQ: ${product.moq}</div>` : ''}
       <div class="product-card__cta">
-        了解详情
+        Learn More
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14">
           <path d="M4 10h12M11 5l5 5-5 5"/>
         </svg>
@@ -107,7 +107,7 @@ async function loadCategoryFilters(containerId, onSelect) {
 
   const all = document.createElement('button');
   all.className = 'filter-btn active';
-  all.textContent = '全部产品';
+  all.textContent = 'All Products';
   all.dataset.slug = '';
   container.appendChild(all);
 
@@ -136,7 +136,7 @@ function initContactForm() {
     e.preventDefault();
     const btn = form.querySelector('[type="submit"]');
     btn.disabled = true;
-    btn.textContent = '发送中...';
+    btn.textContent = 'Sending...';
 
     const formData = new FormData(form);
     const body = {};
@@ -148,13 +148,13 @@ function initContactForm() {
     });
 
     btn.disabled = false;
-    btn.textContent = '发送询价';
+    btn.textContent = 'Submit Inquiry';
 
     if (res.success) {
-      showToast('询价提交成功！我们将在1-2个工作日内联系您。', 'success');
+      showToast('Inquiry submitted successfully! We will contact you within 1-2 business days.', 'success');
       form.reset();
     } else {
-      showToast(res.error || '提交失败，请重试。', 'error');
+      showToast(res.error || 'Submission failed, please try again.', 'error');
     }
   });
 }

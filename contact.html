@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>定制询价 | 联系我们</title>
-  <meta name="description" content="联系我们获取纸品定制报价，支持笔记本、规划手册、贴纸等全系列产品定制。填写询价表，1-2个工作日内回复。">
+  <title>Custom Inquiry | Contact Us</title>
+  <meta name="description" content="Contact us for custom paper product quotes, covering notebooks, planners, stickers and our full product range. Fill in the inquiry form and we'll reply within 1–2 business days.">
   <link rel="stylesheet" href="css/style.css">
   <style>
     .page-hero { padding: calc(var(--nav-h) + 80px) 0 80px; background: var(--charcoal); color: var(--ivory); }
@@ -51,17 +51,17 @@
 <nav class="nav">
   <div class="nav__inner">
     <a href="/" class="nav__logo">
-      <span class="nav__logo-main">[品牌名称]</span>
+      <span class="nav__logo-main">[Brand Name]</span>
       <span class="nav__logo-sub">Paper Custom Studio</span>
     </a>
     <ul class="nav__links">
-      <li><a href="/">首页</a></li>
-      <li><a href="products.html">产品系列</a></li>
-      <li><a href="about.html">关于我们</a></li>
-      <li><a href="contact.html" class="active">定制询价</a></li>
-      <li><a href="contact.html" class="nav__cta">立即询价</a></li>
+      <li><a href="/">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="contact.html" class="active">Custom Inquiry</a></li>
+      <li><a href="contact.html" class="nav__cta">Get a Quote</a></li>
     </ul>
-    <button class="nav__hamburger" aria-label="菜单">
+    <button class="nav__hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -70,9 +70,9 @@
 <div class="page-hero">
   <div class="container">
     <p class="label" style="color:var(--gold);margin-bottom:20px">Custom Inquiry</p>
-    <h1 style="color:var(--ivory);font-size:clamp(2rem,4vw,3rem);margin-bottom:20px">定制询价</h1>
+    <h1 style="color:var(--ivory);font-size:clamp(2rem,4vw,3rem);margin-bottom:20px">Custom Inquiry</h1>
     <p style="color:rgba(249,245,238,0.6);max-width:480px">
-      填写以下询价表，我们将在1-2个工作日内为您提供专属定制方案和报价
+      Fill in the form below and we will provide you with a tailored proposal and quote within 1–2 business days
     </p>
   </div>
 </div>
@@ -82,8 +82,8 @@
     <div class="contact-layout">
       <!-- Info -->
       <div>
-        <p class="label mb-16">联系方式</p>
-        <h2 style="font-size:1.8rem;margin-bottom:32px">让我们开始<br>您的定制项目</h2>
+        <p class="label mb-16">Contact Info</p>
+        <h2 style="font-size:1.8rem;margin-bottom:32px">Let's Start<br>Your Custom Project</h2>
 
         <div class="contact-info__item" data-reveal>
           <div class="contact-info__icon">
@@ -92,8 +92,8 @@
             </svg>
           </div>
           <div>
-            <div class="label mb-8">电话</div>
-            <p style="color:var(--warm-gray)">[电话号码待填写]</p>
+            <div class="label mb-8">Phone</div>
+            <p style="color:var(--warm-gray)">[Phone number to be filled]</p>
           </div>
         </div>
 
@@ -104,8 +104,8 @@
             </svg>
           </div>
           <div>
-            <div class="label mb-8">邮箱</div>
-            <p style="color:var(--warm-gray)">[邮箱地址待填写]</p>
+            <div class="label mb-8">Email</div>
+            <p style="color:var(--warm-gray)">[Email address to be filled]</p>
           </div>
         </div>
 
@@ -116,79 +116,79 @@
             </svg>
           </div>
           <div>
-            <div class="label mb-8">地址</div>
-            <p style="color:var(--warm-gray)">[公司地址待填写]</p>
+            <div class="label mb-8">Address</div>
+            <p style="color:var(--warm-gray)">[Company address to be filled]</p>
           </div>
         </div>
 
         <div style="margin-top:40px;padding:28px;background:var(--ivory-dark);border-left:3px solid var(--gold)" data-reveal data-reveal-delay="300">
-          <div class="label mb-16">服务时间</div>
+          <div class="label mb-16">Business Hours</div>
           <p style="color:var(--warm-gray);font-size:0.88rem;line-height:1.8">
-            周一至周五：09:00 — 18:00<br>
-            询价回复：1-2 个工作日内<br>
-            [其他服务信息待补充]
+            Mon–Fri: 09:00 — 18:00<br>
+            Inquiry response: within 1–2 business days<br>
+            [Additional service info to be supplemented]
           </p>
         </div>
       </div>
 
       <!-- Form -->
       <div class="contact-form" data-reveal>
-        <p class="label mb-16" style="color:var(--moss)">Inquiry Form · 询价表单</p>
-        <h3 style="font-family:var(--font-display);font-size:1.5rem;margin-bottom:32px;font-weight:400">填写询价信息</h3>
+        <p class="label mb-16" style="color:var(--moss)">Inquiry Form</p>
+        <h3 style="font-family:var(--font-display);font-size:1.5rem;margin-bottom:32px;font-weight:400">Fill in Your Inquiry</h3>
         <form id="inquiryForm" novalidate>
           <div class="form-row">
             <div class="form-group">
-              <label>姓名 <span class="req">*</span></label>
-              <input type="text" name="name" required placeholder="您的姓名">
+              <label>Name <span class="req">*</span></label>
+              <input type="text" name="name" required placeholder="Your name">
             </div>
             <div class="form-group">
-              <label>公司名称</label>
-              <input type="text" name="company" placeholder="公司 / 品牌名称">
+              <label>Company Name</label>
+              <input type="text" name="company" placeholder="Company / brand name">
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>邮箱 <span class="req">*</span></label>
+              <label>Email <span class="req">*</span></label>
               <input type="email" name="email" required placeholder="your@email.com">
             </div>
             <div class="form-group">
-              <label>联系电话</label>
-              <input type="tel" name="phone" placeholder="手机 / 微信号">
+              <label>Phone</label>
+              <input type="tel" name="phone" placeholder="Mobile / WeChat ID">
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>感兴趣的产品</label>
+              <label>Product of Interest</label>
               <select name="product_interest" id="productInterest">
-                <option value="">— 请选择 —</option>
-                <option>笔记本 / 记事本</option>
-                <option>规划手册</option>
-                <option>贴纸 / 标签</option>
-                <option>信纸 / 信封套装</option>
-                <option>便利贴</option>
-                <option>书签 / 配件</option>
-                <option>多品类组合</option>
-                <option>其他（请在备注说明）</option>
+                <option value="">— Please Select —</option>
+                <option>Notebooks / Notepads</option>
+                <option>Planners</option>
+                <option>Stickers / Labels</option>
+                <option>Letter Sets / Envelope Sets</option>
+                <option>Sticky Notes</option>
+                <option>Bookmarks / Accessories</option>
+                <option>Multi-category Bundle</option>
+                <option>Other (please specify in remarks)</option>
               </select>
             </div>
             <div class="form-group">
-              <label>预计数量</label>
+              <label>Estimated Quantity</label>
               <select name="quantity">
-                <option value="">— 请选择 —</option>
-                <option>100件以下</option>
-                <option>100 — 500件</option>
-                <option>500 — 1000件</option>
-                <option>1000 — 5000件</option>
-                <option>5000件以上</option>
+                <option value="">— Please Select —</option>
+                <option>Under 100 pcs</option>
+                <option>100 — 500 pcs</option>
+                <option>500 — 1,000 pcs</option>
+                <option>1,000 — 5,000 pcs</option>
+                <option>Over 5,000 pcs</option>
               </select>
             </div>
           </div>
           <div class="form-group">
-            <label>定制需求说明 <span class="req">*</span></label>
-            <textarea name="message" required placeholder="请描述您的产品定制需求，如尺寸、材质、印刷工艺、设计要求、交货时间等…" rows="5"></textarea>
+            <label>Custom Requirements <span class="req">*</span></label>
+            <textarea name="message" required placeholder="Please describe your custom requirements, such as size, material, printing process, design needs, delivery timeline, etc…" rows="5"></textarea>
           </div>
           <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center">
-            发送询价
+            Submit Inquiry
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
               <path d="M4 10h12M11 5l5 5-5 5"/>
             </svg>
@@ -204,32 +204,32 @@
   <div class="container">
     <div class="section-heading" data-reveal>
       <p class="label section-heading__label">FAQ</p>
-      <h2 class="section-heading__title">常见问题</h2>
+      <h2 class="section-heading__title">Frequently Asked Questions</h2>
     </div>
     <div class="faq-list">
       <div class="faq-item">
-        <div class="faq-question">起订量是多少？<div class="faq-icon">+</div></div>
-        <div class="faq-answer">我们支持小批量定制，大部分产品起订量从50—100件起。具体以产品类型和工艺为准，欢迎咨询。</div>
+        <div class="faq-question">What is the minimum order quantity?<div class="faq-icon">+</div></div>
+        <div class="faq-answer">We support small-batch customization. Most products start from 50–100 pcs. The exact MOQ depends on product type and process — feel free to inquire.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-question">交货周期一般多长？<div class="faq-icon">+</div></div>
-        <div class="faq-answer">标准订单7—15个工作日，复杂工艺或大批量订单需要15—25个工作日。下单前我们会确认具体交期。</div>
+        <div class="faq-question">How long is the delivery lead time?<div class="faq-icon">+</div></div>
+        <div class="faq-answer">Standard orders take 7–15 business days. Complex processes or bulk orders require 15–25 business days. We will confirm the exact delivery date before production.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-question">可以提供样品吗？<div class="faq-icon">+</div></div>
-        <div class="faq-answer">可以，我们提供打样服务。打样费用视产品复杂度而定，大货下单后打样费可抵扣。</div>
+        <div class="faq-question">Can I get samples?<div class="faq-icon">+</div></div>
+        <div class="faq-answer">Yes, we offer sampling services. The sampling fee varies by product complexity and can be deducted from the bulk order once confirmed.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-question">支持哪些印刷工艺？<div class="faq-icon">+</div></div>
-        <div class="faq-answer">支持胶印、数码印、丝网印、烫金/银、压凹凸、UV、覆膜等多种工艺，可根据预算和效果要求选择。</div>
+        <div class="faq-question">What printing processes do you support?<div class="faq-icon">+</div></div>
+        <div class="faq-answer">We support offset printing, digital printing, screen printing, foil stamping (gold/silver), embossing/debossing, UV coating, lamination, and more. Choose based on your budget and desired effect.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-question">如何提供设计文件？<div class="faq-icon">+</div></div>
-        <div class="faq-answer">请提供AI、CDR、PDF格式的矢量源文件，或高分辨率（300dpi以上）的JPG/PNG图片。如需设计服务，我们也提供有偿设计支持。</div>
+        <div class="faq-question">How should I provide design files?<div class="faq-icon">+</div></div>
+        <div class="faq-answer">Please provide vector source files in AI, CDR, or PDF format, or high-resolution (300dpi+) JPG/PNG images. We also offer paid design support if needed.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-question">支持国际发货吗？<div class="faq-icon">+</div></div>
-        <div class="faq-answer">支持，我们可安排国际快递或海运。具体运费和时效请在询价时说明目的地。</div>
+        <div class="faq-question">Do you ship internationally?<div class="faq-icon">+</div></div>
+        <div class="faq-answer">Yes, we can arrange international express or sea freight. Please specify the destination when inquiring for accurate shipping costs and timelines.</div>
       </div>
     </div>
   </div>
@@ -238,7 +238,7 @@
 <footer class="footer">
   <div class="container">
     <div class="footer__bottom">
-      <span>© 2025 [公司名称]. All rights reserved.</span>
+      <span>© 2025 [Company Name]. All rights reserved.</span>
     </div>
   </div>
 </footer>
