@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">产品详情 | 纸品定制</title>
+  <meta name="description" id="pageDesc" content="高品质纸品定制产品详情">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .product-detail {
+      padding-top: calc(var(--nav-h) + 60px);
+    }
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 48px;
+      font-size: 0.82rem;
+      color: var(--warm-gray);
+    }
+    .breadcrumb a:hover { color: var(--charcoal); }
+    .breadcrumb__sep { opacity: 0.4; }
+    .detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      margin-bottom: 100px;
+    }
+    .gallery {
+      position: sticky;
+      top: calc(var(--nav-h) + 24px);
+    }
+    .gallery__main {
+      aspect-ratio: 1;
+      overflow: hidden;
+      background: var(--ivory-dark);
+      margin-bottom: 12px;
+      cursor: zoom-in;
+    }
+    .gallery__main img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s var(--transition);
+    }
+    .gallery__main:hover img { transform: scale(1.04); }
+    .gallery__thumbs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+    }
+    .gallery__thumb {
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color var(--transition);
+      background: var(--ivory-dark);
+    }
+    .gallery__thumb.active { border-color: var(--gold); }
+    .gallery__thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .product-info {}
+    .product-info__cat {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--moss);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .product-info__title {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+    .product-info__desc {
+      color: var(--warm-gray);
+      line-height: 1.8;
+      margin-bottom: 36px;
+      font-size: 0.95rem;
+    }
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 36px;
+      font-size: 0.88rem;
+    }
+    .spec-table th,
+    .spec-table td {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .spec-table th {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      width: 40%;
+      background: var(--ivory-dark);
+    }
+    .product-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 36px;
+    }
+    .tags-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .tag {
+      padding: 4px 12px;
+      background: var(--ivory-dark);
+      font-size: 0.78rem;
+      color: var(--warm-gray);
+      border-radius: 2px;
+    }
+    .related-products { padding: 80px 0; background: var(--paper); }
+    @media (max-width: 900px) {
+      .detail-layout { grid-template-columns: 1fr; gap: 40px; }
+      .gallery { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo">
+      <span class="nav__logo-main">[品牌名称]</span>
+      <span class="nav__logo-sub">Paper Custom Studio</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="/">首页</a></li>
+      <li><a href="products.html">产品系列</a></li>
+      <li><a href="about.html">关于我们</a></li>
+      <li><a href="contact.html">定制询价</a></li>
+      <li><a href="contact.html" class="nav__cta">立即询价</a></li>
+    </ul>
+    <button class="nav__hamburger" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="product-detail">
+  <div class="container" id="productContent">
+    <div class="spinner"></div>
+  </div>
+</div>
+
+<section class="related-products" id="relatedSection" style="display:none">
+  <div class="container">
+    <div class="section-heading" data-reveal>
+      <p class="label section-heading__label">You May Also Like</p>
+      <h2 class="section-heading__title">相关产品</h2>
+    </div>
+    <div class="product-grid" id="relatedGrid"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__bottom" style="border-top:1px solid rgba(255,255,255,0.08);padding-top:32px">
+      <span>© 2025 [公司名称]. All rights reserved.</span>
+      <a href="products.html" style="color:rgba(249,245,238,0.5);font-size:0.82rem">← 返回产品列表</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  const slug = new URLSearchParams(window.location.search).get('slug');
+  let currentImgIdx = 0;
+
+  function renderProduct(product) {
+    document.getElementById('pageTitle').textContent = `${product.name} | 纸品定制`;
+    document.getElementById('pageDesc').setAttribute('content', product.short_desc || product.description || '');
+
+    const images = product.images || [];
+    const primaryImg = images.find(i => i.is_primary) || images[0];
+
+    // Gallery HTML
+    const galleryHtml = images.length > 0 ? `
+      <div class="gallery__main" id="mainImg">
+        <img src="${primaryImg.image_path}" alt="${product.name}" id="mainImgEl">
+      </div>
+      ${images.length > 1 ? `
+      <div class="gallery__thumbs">
+        ${images.map((img, i) => `
+          <div class="gallery__thumb ${i === 0 ? 'active' : ''}" data-idx="${i}" data-src="${img.image_path}">
+            <img src="${img.image_path}" alt="${product.name} 图${i+1}">
+          </div>
+        `).join('')}
+      </div>` : ''}
+    ` : `<div class="gallery__main"><div class="placeholder-img" style="height:400px">📄</div></div>`;
+
+    // Spec table
+    let specRows = '';
+    if (product.moq) specRows += `<tr><th>起订量</th><td>${product.moq}</td></tr>`;
+    if (product.lead_time) specRows += `<tr><th>交货周期</th><td>${product.lead_time}</td></tr>`;
+    if (product.materials) specRows += `<tr><th>材质选项</th><td>${product.materials}</td></tr>`;
+    if (product.specifications) {
+      try {
+        const specs = JSON.parse(product.specifications);
+        Object.entries(specs).forEach(([k, v]) => {
+          specRows += `<tr><th>${k}</th><td>${v}</td></tr>`;
+        });
+      } catch {
+        specRows += `<tr><th>规格说明</th><td>${product.specifications}</td></tr>`;
+      }
+    }
+
+    const tags = product.tags ? product.tags.split(',').filter(Boolean) : [];
+
+    document.getElementById('productContent').innerHTML = `
+      <div class="breadcrumb">
+        <a href="/">首页</a>
+        <span class="breadcrumb__sep">/</span>
+        <a href="products.html">产品系列</a>
+        <span class="breadcrumb__sep">/</span>
+        ${product.category_name ? `<a href="products.html?category=${product.category_slug}">${product.category_name}</a><span class="breadcrumb__sep">/</span>` : ''}
+        <span>${product.name}</span>
+      </div>
+      <div class="detail-layout">
+        <div class="gallery">${galleryHtml}</div>
+        <div class="product-info">
+          <div class="product-info__cat">${product.category_name || '纸品定制'}</div>
+          <h1 class="product-info__title">${product.name}</h1>
+          ${product.name_en ? `<p class="label mb-16" style="color:var(--warm-gray)">${product.name_en}</p>` : ''}
+          <p class="product-info__desc">${product.description || product.short_desc || ''}</p>
+          ${specRows ? `
+          <table class="spec-table">
+            <tbody>${specRows}</tbody>
+          </table>` : ''}
+          <div class="product-actions">
+            <a href="contact.html?product=${encodeURIComponent(product.name)}" class="btn btn--primary">
+              立即询价定制
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
+                <path d="M4 10h12M11 5l5 5-5 5"/>
+              </svg>
+            </a>
+            <a href="contact.html" class="btn btn--outline">获取样品</a>
+          </div>
+          ${tags.length > 0 ? `
+          <div class="tags-list">
+            ${tags.map(t => `<span class="tag">${t.trim()}</span>`).join('')}
+          </div>` : ''}
+        </div>
+      </div>
+    `;
+
+    // Gallery interaction
+    document.querySelectorAll('.gallery__thumb').forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        document.querySelectorAll('.gallery__thumb').forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+        document.getElementById('mainImgEl').src = thumb.dataset.src;
+      });
+    });
+
+    // Load related products
+    loadRelated(product.category_id, product.id);
+  }
+
+  async function loadRelated(catId, productId) {
+    if (!catId) return;
+    const data = await PaperCustom.apiFetch(`/api/products?category_id=${catId}&limit=4`);
+    if (!data.success) return;
+    const related = data.data.filter(p => p.id !== productId).slice(0, 4);
+    if (related.length === 0) return;
+    document.getElementById('relatedSection').style.display = 'block';
+    document.getElementById('relatedGrid').innerHTML = related.map(PaperCustom.renderProductCard).join('');
+  }
+
+  async function init() {
+    if (!slug) {
+      document.getElementById('productContent').innerHTML = `
+        <div style="text-align:center;padding:80px 0">
+          <h2 style="font-family:var(--font-display);margin-bottom:16px">产品不存在</h2>
+          <a href="products.html" class="btn btn--outline">返回产品列表</a>
+        </div>`;
+      return;
+    }
+    const data = await PaperCustom.apiFetch(`/api/products/${slug}`);
+    if (!data.success) {
+      document.getElementById('productContent').innerHTML = `
+        <div style="text-align:center;padding:80px 0">
+          <h2 style="font-family:var(--font-display);margin-bottom:16px">产品未找到</h2>
+          <a href="products.html" class="btn btn--outline">返回产品列表</a>
+        </div>`;
+      return;
+    }
+    renderProduct(data.data);
+  }
+  init();
+</script>
+</body>
+</html>

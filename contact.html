@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>定制询价 | 联系我们</title>
+  <meta name="description" content="联系我们获取纸品定制报价，支持笔记本、规划手册、贴纸等全系列产品定制。填写询价表，1-2个工作日内回复。">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .page-hero { padding: calc(var(--nav-h) + 80px) 0 80px; background: var(--charcoal); color: var(--ivory); }
+    .faq-list { margin-top: 60px; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 24px 0;
+      cursor: pointer;
+    }
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      gap: 16px;
+    }
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--warm-gray);
+      transition: var(--transition);
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--gold); border-color: var(--gold); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+      color: var(--warm-gray);
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+    .faq-item.open .faq-answer { max-height: 200px; padding-top: 16px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo">
+      <span class="nav__logo-main">[品牌名称]</span>
+      <span class="nav__logo-sub">Paper Custom Studio</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="/">首页</a></li>
+      <li><a href="products.html">产品系列</a></li>
+      <li><a href="about.html">关于我们</a></li>
+      <li><a href="contact.html" class="active">定制询价</a></li>
+      <li><a href="contact.html" class="nav__cta">立即询价</a></li>
+    </ul>
+    <button class="nav__hamburger" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <p class="label" style="color:var(--gold);margin-bottom:20px">Custom Inquiry</p>
+    <h1 style="color:var(--ivory);font-size:clamp(2rem,4vw,3rem);margin-bottom:20px">定制询价</h1>
+    <p style="color:rgba(249,245,238,0.6);max-width:480px">
+      填写以下询价表，我们将在1-2个工作日内为您提供专属定制方案和报价
+    </p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-layout">
+      <!-- Info -->
+      <div>
+        <p class="label mb-16">联系方式</p>
+        <h2 style="font-size:1.8rem;margin-bottom:32px">让我们开始<br>您的定制项目</h2>
+
+        <div class="contact-info__item" data-reveal>
+          <div class="contact-info__icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .84h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="label mb-8">电话</div>
+            <p style="color:var(--warm-gray)">[电话号码待填写]</p>
+          </div>
+        </div>
+
+        <div class="contact-info__item" data-reveal data-reveal-delay="100">
+          <div class="contact-info__icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <div>
+            <div class="label mb-8">邮箱</div>
+            <p style="color:var(--warm-gray)">[邮箱地址待填写]</p>
+          </div>
+        </div>
+
+        <div class="contact-info__item" data-reveal data-reveal-delay="200">
+          <div class="contact-info__icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div>
+            <div class="label mb-8">地址</div>
+            <p style="color:var(--warm-gray)">[公司地址待填写]</p>
+          </div>
+        </div>
+
+        <div style="margin-top:40px;padding:28px;background:var(--ivory-dark);border-left:3px solid var(--gold)" data-reveal data-reveal-delay="300">
+          <div class="label mb-16">服务时间</div>
+          <p style="color:var(--warm-gray);font-size:0.88rem;line-height:1.8">
+            周一至周五：09:00 — 18:00<br>
+            询价回复：1-2 个工作日内<br>
+            [其他服务信息待补充]
+          </p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="contact-form" data-reveal>
+        <p class="label mb-16" style="color:var(--moss)">Inquiry Form · 询价表单</p>
+        <h3 style="font-family:var(--font-display);font-size:1.5rem;margin-bottom:32px;font-weight:400">填写询价信息</h3>
+        <form id="inquiryForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label>姓名 <span class="req">*</span></label>
+              <input type="text" name="name" required placeholder="您的姓名">
+            </div>
+            <div class="form-group">
+              <label>公司名称</label>
+              <input type="text" name="company" placeholder="公司 / 品牌名称">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>邮箱 <span class="req">*</span></label>
+              <input type="email" name="email" required placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+              <label>联系电话</label>
+              <input type="tel" name="phone" placeholder="手机 / 微信号">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>感兴趣的产品</label>
+              <select name="product_interest" id="productInterest">
+                <option value="">— 请选择 —</option>
+                <option>笔记本 / 记事本</option>
+                <option>规划手册</option>
+                <option>贴纸 / 标签</option>
+                <option>信纸 / 信封套装</option>
+                <option>便利贴</option>
+                <option>书签 / 配件</option>
+                <option>多品类组合</option>
+                <option>其他（请在备注说明）</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>预计数量</label>
+              <select name="quantity">
+                <option value="">— 请选择 —</option>
+                <option>100件以下</option>
+                <option>100 — 500件</option>
+                <option>500 — 1000件</option>
+                <option>1000 — 5000件</option>
+                <option>5000件以上</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>定制需求说明 <span class="req">*</span></label>
+            <textarea name="message" required placeholder="请描述您的产品定制需求，如尺寸、材质、印刷工艺、设计要求、交货时间等…" rows="5"></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center">
+            发送询价
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
+              <path d="M4 10h12M11 5l5 5-5 5"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section section--sm" style="background:var(--paper)" id="faq">
+  <div class="container">
+    <div class="section-heading" data-reveal>
+      <p class="label section-heading__label">FAQ</p>
+      <h2 class="section-heading__title">常见问题</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-question">起订量是多少？<div class="faq-icon">+</div></div>
+        <div class="faq-answer">我们支持小批量定制，大部分产品起订量从50—100件起。具体以产品类型和工艺为准，欢迎咨询。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">交货周期一般多长？<div class="faq-icon">+</div></div>
+        <div class="faq-answer">标准订单7—15个工作日，复杂工艺或大批量订单需要15—25个工作日。下单前我们会确认具体交期。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">可以提供样品吗？<div class="faq-icon">+</div></div>
+        <div class="faq-answer">可以，我们提供打样服务。打样费用视产品复杂度而定，大货下单后打样费可抵扣。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">支持哪些印刷工艺？<div class="faq-icon">+</div></div>
+        <div class="faq-answer">支持胶印、数码印、丝网印、烫金/银、压凹凸、UV、覆膜等多种工艺，可根据预算和效果要求选择。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">如何提供设计文件？<div class="faq-icon">+</div></div>
+        <div class="faq-answer">请提供AI、CDR、PDF格式的矢量源文件，或高分辨率（300dpi以上）的JPG/PNG图片。如需设计服务，我们也提供有偿设计支持。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">支持国际发货吗？<div class="faq-icon">+</div></div>
+        <div class="faq-answer">支持，我们可安排国际快递或海运。具体运费和时效请在询价时说明目的地。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__bottom">
+      <span>© 2025 [公司名称]. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  // Pre-fill product interest from URL
+  const urlProduct = new URLSearchParams(window.location.search).get('product');
+  if (urlProduct) {
+    const el = document.getElementById('productInterest');
+    if (el) {
+      // Try to match existing option, else leave as is
+      Array.from(el.options).forEach(opt => {
+        if (opt.text.includes(urlProduct.split('|')[0].trim())) opt.selected = true;
+      });
+    }
+  }
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-question').addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+</body>
+</html>

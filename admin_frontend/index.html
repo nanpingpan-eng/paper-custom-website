@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>后台管理 | Paper Custom Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    :root {
+      --admin-sidebar: 240px;
+      --admin-bg: #F5F4F0;
+    }
+    body { background: var(--admin-bg); }
+    .admin-layout {
+      display: grid;
+      grid-template-columns: var(--admin-sidebar) 1fr;
+      min-height: 100vh;
+    }
+    /* ─ Sidebar ─ */
+    .admin-sidebar {
+      background: var(--charcoal);
+      color: var(--ivory);
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: var(--admin-sidebar);
+      overflow-y: auto;
+      z-index: 100;
+    }
+    .admin-sidebar__logo {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .admin-sidebar__logo-main {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+    }
+    .admin-sidebar__logo-sub {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: rgba(249,245,238,0.4);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .admin-nav { padding: 16px 0; }
+    .admin-nav__group { margin-bottom: 8px; }
+    .admin-nav__label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(249,245,238,0.3);
+      padding: 8px 24px 4px;
+    }
+    .admin-nav__link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 24px;
+      font-size: 0.88rem;
+      color: rgba(249,245,238,0.65);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .admin-nav__link:hover,
+    .admin-nav__link.active {
+      background: rgba(255,255,255,0.06);
+      color: var(--ivory);
+    }
+    .admin-nav__link.active { border-left: 2px solid var(--gold); }
+    .admin-nav__link svg { width: 16px; height: 16px; flex-shrink: 0; }
+    /* ─ Main ─ */
+    .admin-main {
+      margin-left: var(--admin-sidebar);
+      padding: 0;
+    }
+    .admin-topbar {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .admin-topbar__title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+    }
+    .admin-content { padding: 32px; }
+    /* ─ Panels ─ */
+    .admin-panel { display: none; }
+    .admin-panel.active { display: block; }
+    /* ─ Card ─ */
+    .card {
+      background: white;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .card__header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card__header h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 400; }
+    .card__body { padding: 24px; }
+    /* ─ Stats ─ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 24px;
+      border-radius: 4px;
+    }
+    .stat-card__label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 12px;
+    }
+    .stat-card__value {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      color: var(--charcoal);
+    }
+    /* ─ Table ─ */
+    .admin-table { width: 100%; border-collapse: collapse; }
+    .admin-table th {
+      text-align: left;
+      padding: 12px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      border-bottom: 1px solid var(--border);
+      background: var(--ivory);
+    }
+    .admin-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+      vertical-align: middle;
+    }
+    .admin-table tr:last-child td { border-bottom: none; }
+    .admin-table tr:hover td { background: var(--ivory); }
+    .admin-table img { width: 48px; height: 48px; object-fit: cover; border-radius: 2px; }
+    /* ─ Form ─ */
+    .admin-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .admin-form-group { margin-bottom: 20px; }
+    .admin-form-group label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 6px;
+    }
+    .admin-form-group label .req { color: var(--gold); }
+    .admin-form-group input,
+    .admin-form-group select,
+    .admin-form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      background: var(--ivory);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      color: var(--charcoal);
+      border-radius: 2px;
+    }
+    .admin-form-group input:focus,
+    .admin-form-group select:focus,
+    .admin-form-group textarea:focus { outline: none; border-color: var(--moss); }
+    .admin-form-group textarea { resize: vertical; min-height: 100px; }
+    .admin-form-group input[type="checkbox"] { width: auto; }
+    /* ─ Upload Zone ─ */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: 4px;
+      background: var(--ivory);
+    }
+    .upload-zone:hover { border-color: var(--moss); background: white; }
+    .upload-zone input { display: none; }
+    .upload-zone__icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .upload-zone__text { font-size: 0.88rem; color: var(--warm-gray); }
+    /* ─ Image Preview Grid ─ */
+    .img-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .img-preview-item {
+      position: relative;
+      aspect-ratio: 1;
+      background: var(--ivory-dark);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .img-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+    .img-preview-item__remove {
+      position: absolute;
+      top: 4px; right: 4px;
+      width: 20px; height: 20px;
+      background: rgba(28,28,28,0.7);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    /* ─ Badge ─ */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 2px;
+    }
+    .badge--green { background: #E8F5E2; color: #3A7A2E; }
+    .badge--gray { background: var(--ivory-dark); color: var(--warm-gray); }
+    .badge--gold { background: #FFF5DC; color: #8A6C20; }
+    .badge--red { background: #FDE8E8; color: #C0392B; }
+    /* ─ Actions ─ */
+    .action-btn {
+      padding: 6px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: 2px;
+      background: none;
+    }
+    .action-btn:hover { border-color: var(--charcoal); background: var(--charcoal); color: var(--ivory); }
+    .action-btn--danger:hover { border-color: #C0392B; background: #C0392B; color: white; }
+    .action-btn--success { border-color: var(--moss); color: var(--moss); }
+    .action-btn--success:hover { background: var(--moss); color: white; }
+    /* ─ Modal ─ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(28,28,28,0.6);
+      z-index: 1000;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 20px;
+      overflow-y: auto;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: white;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: auto;
+    }
+    .modal__header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal__header h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 400; }
+    .modal__close {
+      width: 32px; height: 32px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      color: var(--warm-gray);
+      cursor: pointer;
+      border-radius: 2px;
+      background: none;
+    }
+    .modal__body { padding: 28px; max-height: 70vh; overflow-y: auto; }
+    .modal__footer {
+      padding: 20px 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    @media (max-width: 900px) {
+      .admin-layout { grid-template-columns: 1fr; }
+      .admin-sidebar { display: none; }
+      .admin-main { margin-left: 0; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .admin-form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar__logo">
+      <div class="admin-sidebar__logo-main">[品牌名称]</div>
+      <div class="admin-sidebar__logo-sub">Admin Panel</div>
+    </div>
+    <nav class="admin-nav">
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">概览</div>
+        <div class="admin-nav__link active" data-panel="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          仪表盘
+        </div>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">产品管理</div>
+        <div class="admin-nav__link" data-panel="products">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          产品列表
+        </div>
+        <div class="admin-nav__link" data-panel="add-product">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          添加产品
+        </div>
+        <div class="admin-nav__link" data-panel="categories">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+          分类管理
+        </div>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">客户</div>
+        <div class="admin-nav__link" data-panel="inquiries">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          询价管理
+        </div>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">网站</div>
+        <div class="admin-nav__link" onclick="window.open('/', '_blank')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          查看前台
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div class="admin-topbar__title" id="topbarTitle">仪表盘</div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--warm-gray)" id="adminClock"></span>
+      </div>
+    </div>
+    <div class="admin-content">
+
+      <!-- Dashboard Panel -->
+      <div class="admin-panel active" id="panel-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-card__label">产品总数</div><div class="stat-card__value" id="statProducts">—</div></div>
+          <div class="stat-card"><div class="stat-card__label">分类数量</div><div class="stat-card__value" id="statCats">—</div></div>
+          <div class="stat-card"><div class="stat-card__label">精选产品</div><div class="stat-card__value" id="statFeatured">—</div></div>
+          <div class="stat-card"><div class="stat-card__label">未处理询价</div><div class="stat-card__value" id="statInquiries">—</div></div>
+        </div>
+        <div class="card">
+          <div class="card__header"><h3>最新询价</h3><button class="action-btn" onclick="switchPanel('inquiries')">查看全部</button></div>
+          <div style="overflow-x:auto"><table class="admin-table" id="dashInquiries">
+            <thead><tr><th>姓名</th><th>公司</th><th>产品</th><th>时间</th><th>状态</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- Products Panel -->
+      <div class="admin-panel" id="panel-products">
+        <div class="card">
+          <div class="card__header">
+            <h3>产品列表</h3>
+            <div style="display:flex;gap:10px">
+              <input type="text" id="productSearch" placeholder="搜索产品…" style="padding:8px 14px;border:1px solid var(--border);font-size:0.85rem;width:200px">
+              <button class="btn btn--primary" style="padding:8px 18px;font-size:0.75rem" onclick="switchPanel('add-product')">+ 添加产品</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>图片</th><th>产品名称</th><th>分类</th><th>起订量</th><th>状态</th><th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="productTableBody"></tbody>
+            </table>
+          </div>
+          <div id="productTableLoading" style="text-align:center;padding:40px;color:var(--warm-gray)">加载中…</div>
+        </div>
+      </div>
+
+      <!-- Add Product Panel -->
+      <div class="admin-panel" id="panel-add-product">
+        <div class="card">
+          <div class="card__header">
+            <h3 id="productFormTitle">添加新产品</h3>
+            <button class="action-btn" onclick="resetProductForm();switchPanel('products')">返回列表</button>
+          </div>
+          <div class="card__body">
+            <form id="productForm" enctype="multipart/form-data">
+              <input type="hidden" id="editingProductId">
+              <div class="admin-form-grid">
+                <div class="admin-form-group">
+                  <label>产品名称（中文）<span class="req">*</span></label>
+                  <input type="text" name="name" id="pName" required placeholder="如：A5精装笔记本">
+                </div>
+                <div class="admin-form-group">
+                  <label>产品名称（英文）</label>
+                  <input type="text" name="name_en" id="pNameEn" placeholder="如：A5 Hardcover Notebook">
+                </div>
+              </div>
+              <div class="admin-form-grid">
+                <div class="admin-form-group">
+                  <label>所属分类<span class="req">*</span></label>
+                  <select name="category_id" id="pCategory" required>
+                    <option value="">— 请选择分类 —</option>
+                  </select>
+                </div>
+                <div class="admin-form-group">
+                  <label>是否精选</label>
+                  <select name="featured" id="pFeatured">
+                    <option value="0">否</option>
+                    <option value="1">是（显示在首页）</option>
+                  </select>
+                </div>
+              </div>
+              <div class="admin-form-group">
+                <label>产品简介</label>
+                <textarea name="short_desc" id="pShortDesc" rows="2" placeholder="一两句话描述产品特点"></textarea>
+              </div>
+              <div class="admin-form-group">
+                <label>详细描述</label>
+                <textarea name="description" id="pDesc" rows="5" placeholder="详细的产品描述，工艺特点，适用场景等"></textarea>
+              </div>
+              <div class="admin-form-grid">
+                <div class="admin-form-group">
+                  <label>起订量（MOQ）</label>
+                  <input type="text" name="moq" id="pMoq" placeholder="如：100件起">
+                </div>
+                <div class="admin-form-group">
+                  <label>交货周期</label>
+                  <input type="text" name="lead_time" id="pLeadTime" placeholder="如：7-10个工作日">
+                </div>
+              </div>
+              <div class="admin-form-grid">
+                <div class="admin-form-group">
+                  <label>可选材质</label>
+                  <input type="text" name="materials" id="pMaterials" placeholder="如：牛皮纸、布面、PU皮">
+                </div>
+                <div class="admin-form-group">
+                  <label>标签（逗号分隔）</label>
+                  <input type="text" name="tags" id="pTags" placeholder="如：定制,企业礼品,笔记本">
+                </div>
+              </div>
+              <div class="admin-form-group">
+                <label>规格说明（JSON格式，可留空）</label>
+                <textarea name="specifications" id="pSpecs" rows="3" placeholder='{"尺寸":"A5 (148×210mm)","页数":"80页（160面）","装订":"锁线精装"}'></textarea>
+              </div>
+              <div class="admin-form-group">
+                <label>排序权重（数字越大越靠前）</label>
+                <input type="number" name="sort_order" id="pSort" value="0">
+              </div>
+              <div class="admin-form-group">
+                <label>上传图片（最多20张，首张为主图）</label>
+                <div class="upload-zone" id="uploadZone">
+                  <input type="file" name="images" id="imageInput" multiple accept="image/*">
+                  <div class="upload-zone__icon">🖼️</div>
+                  <div class="upload-zone__text">点击或拖拽上传图片<br><small>支持JPG、PNG、WebP，单张最大10MB</small></div>
+                </div>
+                <div class="img-preview-grid" id="imgPreviewGrid"></div>
+              </div>
+              <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+                <button type="button" class="btn btn--outline" onclick="resetProductForm();switchPanel('products')">取消</button>
+                <button type="submit" class="btn btn--primary" id="productSubmitBtn">保存产品</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories Panel -->
+      <div class="admin-panel" id="panel-categories">
+        <div class="card">
+          <div class="card__header">
+            <h3>分类管理</h3>
+            <button class="btn btn--primary" style="padding:8px 18px;font-size:0.75rem" onclick="openCatModal()">+ 添加分类</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="admin-table">
+              <thead><tr><th>分类名称</th><th>英文名</th><th>Slug</th><th>排序</th><th>操作</th></tr></thead>
+              <tbody id="catTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inquiries Panel -->
+      <div class="admin-panel" id="panel-inquiries">
+        <div class="card">
+          <div class="card__header"><h3>询价管理</h3></div>
+          <div style="overflow-x:auto">
+            <table class="admin-table">
+              <thead><tr><th>姓名</th><th>公司</th><th>邮箱</th><th>产品兴趣</th><th>数量</th><th>时间</th><th>状态</th><th>操作</th></tr></thead>
+              <tbody id="inquiryTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Category Modal -->
+<div class="modal-overlay" id="catModal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3>添加/编辑分类</h3>
+      <button class="modal__close" onclick="closeCatModal()">×</button>
+    </div>
+    <div class="modal__body">
+      <form id="catForm" enctype="multipart/form-data">
+        <input type="hidden" id="catEditId">
+        <div class="admin-form-grid">
+          <div class="admin-form-group">
+            <label>分类名称（中文）<span class="req">*</span></label>
+            <input type="text" name="name" id="catName" required>
+          </div>
+          <div class="admin-form-group">
+            <label>分类名称（英文）</label>
+            <input type="text" name="name_en" id="catNameEn">
+          </div>
+        </div>
+        <div class="admin-form-group">
+          <label>描述</label>
+          <textarea name="description" id="catDesc" rows="3"></textarea>
+        </div>
+        <div class="admin-form-group">
+          <label>排序</label>
+          <input type="number" name="sort_order" id="catSort" value="0">
+        </div>
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--outline" onclick="closeCatModal()">取消</button>
+      <button class="btn btn--primary" onclick="saveCat()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Inquiry Detail Modal -->
+<div class="modal-overlay" id="inquiryModal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3>询价详情</h3>
+      <button class="modal__close" onclick="closeInquiryModal()">×</button>
+    </div>
+    <div class="modal__body" id="inquiryDetail"></div>
+    <div class="modal__footer">
+      <button class="btn btn--outline" onclick="closeInquiryModal()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = '';
+
+  // ─ Clock ─
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('adminClock').textContent = now.toLocaleString('zh-CN');
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // ─ Toast ─
+  function showToast(msg, type='success') {
+    let t = document.querySelector('.toast');
+    if (!t) { t = document.createElement('div'); t.className='toast'; document.body.appendChild(t); }
+    t.textContent = msg;
+    t.className = `toast toast--${type} show`;
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ─ Panel Switching ─
+  const panelTitles = {
+    'dashboard': '仪表盘', 'products': '产品列表', 'add-product': '添加产品',
+    'categories': '分类管理', 'inquiries': '询价管理',
+  };
+
+  function switchPanel(name) {
+    document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.admin-nav__link').forEach(l => l.classList.remove('active'));
+    document.getElementById(`panel-${name}`)?.classList.add('active');
+    document.querySelector(`[data-panel="${name}"]`)?.classList.add('active');
+    document.getElementById('topbarTitle').textContent = panelTitles[name] || name;
+
+    if (name === 'dashboard') loadDashboard();
+    if (name === 'products') loadProducts();
+    if (name === 'categories') loadCategories();
+    if (name === 'inquiries') loadInquiries();
+    if (name === 'add-product') {
+      document.getElementById('productFormTitle').textContent = '添加新产品';
+      document.getElementById('productSubmitBtn').textContent = '保存产品';
+      loadCategoryOptions();
+    }
+  }
+
+  document.querySelectorAll('[data-panel]').forEach(link => {
+    link.addEventListener('click', () => switchPanel(link.dataset.panel));
+  });
+
+  // ─ API Fetch ─
+  async function api(url, options={}) {
+    const res = await fetch(API + url, options);
+    return res.json();
+  }
+
+  // ─ Dashboard ─
+  async function loadDashboard() {
+    const [prods, cats, inqs] = await Promise.all([
+      api('/api/products'), api('/api/categories'), api('/api/inquiries'),
+    ]);
+    document.getElementById('statProducts').textContent = prods.total || 0;
+    document.getElementById('statCats').textContent = cats.data?.length || 0;
+    document.getElementById('statFeatured').textContent = (prods.data||[]).filter(p=>p.featured).length;
+    const newInqs = (inqs.data||[]).filter(i=>i.status==='new');
+    document.getElementById('statInquiries').textContent = newInqs.length;
+
+    const tbody = document.querySelector('#dashInquiries tbody');
+    const recent = (inqs.data||[]).slice(0, 5);
+    tbody.innerHTML = recent.length ? recent.map(i => `
+      <tr>
+        <td>${i.name}</td>
+        <td>${i.company || '—'}</td>
+        <td>${i.product_interest || '—'}</td>
+        <td style="font-size:0.8rem;color:var(--warm-gray)">${i.created_at.split(' ')[0]}</td>
+        <td><span class="badge badge--${i.status==='new'?'red':'gray'}">${i.status==='new'?'新询价':'已处理'}</span></td>
+      </tr>`).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--warm-gray);padding:32px">暂无询价</td></tr>';
+  }
+
+  // ─ Products ─
+  let allProducts = [];
+  async function loadProducts() {
+    document.getElementById('productTableLoading').style.display = 'block';
+    document.getElementById('productTableBody').innerHTML = '';
+    const data = await api('/api/products');
+    allProducts = data.data || [];
+    renderProductTable(allProducts);
+    document.getElementById('productTableLoading').style.display = 'none';
+  }
+
+  function renderProductTable(products) {
+    const tbody = document.getElementById('productTableBody');
+    if (!products.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--warm-gray)">暂无产品，点击"添加产品"开始</td></tr>';
+      return;
+    }
+    tbody.innerHTML = products.map(p => `
+      <tr>
+        <td>${p.primary_image ? `<img src="${p.primary_image}" alt="${p.name}">` : '<div style="width:48px;height:48px;background:var(--ivory-dark);display:flex;align-items:center;justify-content:center;font-size:1.2rem">📄</div>'}</td>
+        <td><strong>${p.name}</strong>${p.name_en ? `<br><span style="font-size:0.78rem;color:var(--warm-gray)">${p.name_en}</span>` : ''}</td>
+        <td>${p.category_name || '—'}</td>
+        <td>${p.moq || '—'}</td>
+        <td>
+          ${p.featured ? '<span class="badge badge--gold">精选</span>' : '<span class="badge badge--gray">普通</span>'}
+        </td>
+        <td>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="action-btn" onclick="editProduct(${p.id})">编辑</button>
+            <button class="action-btn action-btn--danger" onclick="deleteProduct(${p.id}, '${p.name.replace(/'/g,"\\'") }')">删除</button>
+          </div>
+        </td>
+      </tr>`).join('');
+  }
+
+  document.getElementById('productSearch').addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    renderProductTable(allProducts.filter(p =>
+      p.name.toLowerCase().includes(q) || (p.name_en||'').toLowerCase().includes(q) || (p.tags||'').toLowerCase().includes(q)
+    ));
+  });
+
+  // ─ Add/Edit Product ─
+  let productImgFiles = [];
+  const uploadZone = document.getElementById('uploadZone');
+  const imageInput = document.getElementById('imageInput');
+
+  uploadZone.addEventListener('click', () => imageInput.click());
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.style.borderColor='var(--moss)'; });
+  uploadZone.addEventListener('dragleave', () => { uploadZone.style.borderColor=''; });
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.style.borderColor='';
+    handleFiles(e.dataTransfer.files);
+  });
+  imageInput.addEventListener('change', e => handleFiles(e.target.files));
+
+  function handleFiles(files) {
+    Array.from(files).forEach(file => {
+      if (!file.type.startsWith('image/')) return;
+      productImgFiles.push(file);
+      const reader = new FileReader();
+      reader.onload = e => {
+        const div = document.createElement('div');
+        div.className = 'img-preview-item';
+        div.innerHTML = `<img src="${e.target.result}"><div class="img-preview-item__remove" onclick="removePreviewImg(this, ${productImgFiles.length-1})">×</div>`;
+        document.getElementById('imgPreviewGrid').appendChild(div);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function removePreviewImg(el, idx) {
+    productImgFiles.splice(idx, 1);
+    el.parentElement.remove();
+  }
+
+  async function loadCategoryOptions() {
+    const data = await api('/api/categories');
+    const sel = document.getElementById('pCategory');
+    const current = sel.value;
+    sel.innerHTML = '<option value="">— 请选择分类 —</option>';
+    (data.data || []).forEach(c => {
+      sel.innerHTML += `<option value="${c.id}" ${c.id == current ? 'selected' : ''}>${c.name}</option>`;
+    });
+  }
+
+  document.getElementById('productForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const editId = document.getElementById('editingProductId').value;
+    const fd = new FormData(e.target);
+    productImgFiles.forEach(f => fd.append('images', f));
+    // Remove the old input file field to avoid sending empty
+    fd.delete('images'); // re-add only actual files
+    productImgFiles.forEach(f => fd.append('images', f));
+
+    const url = editId ? `/api/products/${editId}` : '/api/products';
+    const method = editId ? 'PUT' : 'POST';
+
+    const btn = document.getElementById('productSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = '保存中...';
+
+    const res = await fetch(API + url, { method, body: fd });
+    const data = await res.json();
+    btn.disabled = false;
+    btn.textContent = '保存产品';
+
+    if (data.success) {
+      showToast(editId ? '产品已更新' : '产品已添加', 'success');
+      resetProductForm();
+      switchPanel('products');
+    } else {
+      showToast(data.error || '保存失败', 'error');
+    }
+  });
+
+  function resetProductForm() {
+    document.getElementById('editingProductId').value = '';
+    document.getElementById('productForm').reset();
+    productImgFiles = [];
+    document.getElementById('imgPreviewGrid').innerHTML = '';
+    document.getElementById('productFormTitle').textContent = '添加新产品';
+    document.getElementById('productSubmitBtn').textContent = '保存产品';
+  }
+
+  async function editProduct(id) {
+    const data = await api(`/api/products/${id}`);
+    if (!data.success) return;
+    const p = data.data;
+    await loadCategoryOptions();
+    document.getElementById('editingProductId').value = p.id;
+    document.getElementById('pName').value = p.name || '';
+    document.getElementById('pNameEn').value = p.name_en || '';
+    document.getElementById('pCategory').value = p.category_id || '';
+    document.getElementById('pFeatured').value = p.featured || 0;
+    document.getElementById('pShortDesc').value = p.short_desc || '';
+    document.getElementById('pDesc').value = p.description || '';
+    document.getElementById('pMoq').value = p.moq || '';
+    document.getElementById('pLeadTime').value = p.lead_time || '';
+    document.getElementById('pMaterials').value = p.materials || '';
+    document.getElementById('pTags').value = p.tags || '';
+    document.getElementById('pSpecs').value = p.specifications || '';
+    document.getElementById('pSort').value = p.sort_order || 0;
+    productImgFiles = [];
+    const previewGrid = document.getElementById('imgPreviewGrid');
+    previewGrid.innerHTML = (p.images || []).map(img =>
+      `<div class="img-preview-item"><img src="${img.image_path}" alt=""><div class="img-preview-item__remove" title="删除图片" onclick="deleteProductImage(${img.id}, this)">×</div></div>`
+    ).join('');
+    document.getElementById('productFormTitle').textContent = '编辑产品';
+    document.getElementById('productSubmitBtn').textContent = '更新产品';
+    switchPanel('add-product');
+  }
+
+  async function deleteProductImage(imgId, el) {
+    if (!confirm('确定删除这张图片？')) return;
+    const res = await api(`/api/product-images/${imgId}`, { method: 'DELETE', headers:{'Content-Type':'application/json'} });
+    if (res.success) { el.parentElement.remove(); showToast('图片已删除'); }
+  }
+
+  async function deleteProduct(id, name) {
+    if (!confirm(`确定删除产品「${name}」？此操作不可撤销。`)) return;
+    const res = await api(`/api/products/${id}`, { method: 'DELETE', headers:{'Content-Type':'application/json'} });
+    if (res.success) { showToast('产品已删除'); loadProducts(); }
+    else showToast('删除失败', 'error');
+  }
+
+  // ─ Categories ─
+  async function loadCategories() {
+    const data = await api('/api/categories');
+    const tbody = document.getElementById('catTableBody');
+    tbody.innerHTML = (data.data || []).map(c => `
+      <tr>
+        <td><strong>${c.name}</strong></td>
+        <td>${c.name_en || '—'}</td>
+        <td><code style="font-size:0.78rem;color:var(--warm-gray)">${c.slug}</code></td>
+        <td>${c.sort_order}</td>
+        <td>
+          <div style="display:flex;gap:6px">
+            <button class="action-btn" onclick="editCat(${c.id},'${c.name.replace(/'/g,"\\'")}','${(c.name_en||'').replace(/'/g,"\\'")}','${(c.description||'').replace(/'/g,"\\'")}',${c.sort_order})">编辑</button>
+            <button class="action-btn action-btn--danger" onclick="deleteCat(${c.id})">删除</button>
+          </div>
+        </td>
+      </tr>`).join('');
+  }
+
+  function openCatModal() {
+    document.getElementById('catEditId').value = '';
+    document.getElementById('catForm').reset();
+    document.getElementById('catModal').classList.add('open');
+  }
+  function closeCatModal() { document.getElementById('catModal').classList.remove('open'); }
+
+  function editCat(id, name, nameEn, desc, sort) {
+    document.getElementById('catEditId').value = id;
+    document.getElementById('catName').value = name;
+    document.getElementById('catNameEn').value = nameEn;
+    document.getElementById('catDesc').value = desc;
+    document.getElementById('catSort').value = sort;
+    document.getElementById('catModal').classList.add('open');
+  }
+
+  async function saveCat() {
+    const id = document.getElementById('catEditId').value;
+    const fd = new FormData(document.getElementById('catForm'));
+    const url = id ? `/api/categories/${id}` : '/api/categories';
+    const method = id ? 'PUT' : 'POST';
+    const res = await fetch(API + url, { method, body: fd });
+    const data = await res.json();
+    if (data.success) {
+      showToast(id ? '分类已更新' : '分类已添加');
+      closeCatModal();
+      loadCategories();
+    } else {
+      showToast(data.error || '保存失败', 'error');
+    }
+  }
+
+  async function deleteCat(id) {
+    if (!confirm('确定删除此分类？该分类下的产品不会被删除。')) return;
+    const res = await api(`/api/categories/${id}`, { method: 'DELETE', headers:{'Content-Type':'application/json'} });
+    if (res.success) { showToast('分类已删除'); loadCategories(); }
+  }
+
+  // ─ Inquiries ─
+  async function loadInquiries() {
+    const data = await api('/api/inquiries');
+    const tbody = document.getElementById('inquiryTableBody');
+    tbody.innerHTML = (data.data || []).map(i => `
+      <tr>
+        <td><strong>${i.name}</strong></td>
+        <td>${i.company || '—'}</td>
+        <td style="font-size:0.82rem">${i.email}</td>
+        <td>${i.product_interest || '—'}</td>
+        <td>${i.quantity || '—'}</td>
+        <td style="font-size:0.78rem;color:var(--warm-gray)">${i.created_at.split(' ')[0]}</td>
+        <td><span class="badge badge--${i.status==='new'?'red':'gray'}">${i.status==='new'?'待处理':'已处理'}</span></td>
+        <td>
+          <div style="display:flex;gap:6px">
+            <button class="action-btn" onclick="viewInquiry(${i.id})">查看</button>
+            ${i.status==='new'?`<button class="action-btn action-btn--success" onclick="markHandled(${i.id})">标记处理</button>`:''}
+          </div>
+        </td>
+      </tr>`).join('') || '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--warm-gray)">暂无询价</td></tr>';
+  }
+
+  let inquiries = [];
+  async function viewInquiry(id) {
+    const data = await api('/api/inquiries');
+    const i = (data.data || []).find(x => x.id === id);
+    if (!i) return;
+    document.getElementById('inquiryDetail').innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+        <div><div class="label mb-8">姓名</div><p>${i.name}</p></div>
+        <div><div class="label mb-8">公司</div><p>${i.company || '—'}</p></div>
+        <div><div class="label mb-8">邮箱</div><p><a href="mailto:${i.email}" style="color:var(--moss)">${i.email}</a></p></div>
+        <div><div class="label mb-8">电话</div><p>${i.phone || '—'}</p></div>
+        <div><div class="label mb-8">感兴趣产品</div><p>${i.product_interest || '—'}</p></div>
+        <div><div class="label mb-8">预计数量</div><p>${i.quantity || '—'}</p></div>
+      </div>
+      <div class="label mb-8">需求说明</div>
+      <p style="padding:16px;background:var(--ivory);line-height:1.8;font-size:0.9rem">${i.message}</p>
+      <div style="margin-top:20px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:0.8rem;color:var(--warm-gray)">提交时间：${i.created_at}</span>
+        ${i.status==='new'?`<button class="btn btn--primary" style="padding:8px 18px;font-size:0.78rem" onclick="markHandled(${i.id});closeInquiryModal()">标记为已处理</button>`:'<span class="badge badge--gray">已处理</span>'}
+      </div>`;
+    document.getElementById('inquiryModal').classList.add('open');
+  }
+  function closeInquiryModal() { document.getElementById('inquiryModal').classList.remove('open'); }
+
+  async function markHandled(id) {
+    await fetch(API + `/api/inquiries/${id}/status`, {
+      method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ status: 'handled' })
+    });
+    showToast('已标记为处理');
+    loadInquiries();
+    loadDashboard();
+  }
+
+  // ─ Init ─
+  loadDashboard();
+</script>
+</body>
+</html>
